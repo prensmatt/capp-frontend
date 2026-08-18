@@ -1,1 +1,33 @@
-<p>product-detail works!</p>
+<div class="container">
+  <a routerLink="/products" class="back-link">← Back to Products</a>
+
+  <div class="loading" *ngIf="loading">Loading...</div>
+  <div class="error" *ngIf="error">{{ error }}</div>
+
+  <div class="product-detail" *ngIf="product && !loading">
+    <div class="product-image-section">
+      <img
+        [src]="product.image_url || 'assets/placeholder.png'"
+        [alt]="product.name"
+      />
+    </div>
+
+    <div class="product-info">
+      <h1>{{ product.name }}</h1>
+      <p class="description">{{ product.description }}</p>
+
+      <div class="price">${{ product.price | number:'1.2-2' }}</div>
+
+      <div class="stock" [class.out-of-stock]="product.stock === 0">
+        {{ product.stock > 0 ? product.stock + ' in stock' : 'Out of stock' }}
+      </div>
+
+      <button
+        class="btn-buy"
+        [disabled]="product.stock === 0"
+      >
+        {{ product.stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
+      </button>
+    </div>
+  </div>
+</div>
