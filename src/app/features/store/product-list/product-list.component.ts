@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../shared/models/models';
@@ -19,24 +20,29 @@ export class ProductListComponent implements OnInit {
   limit: number = 10;
   offset: number = 0;
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
   }
 
   loadProducts(): void {
-    this.loading = true;
-    this.productService.getAll(this.limit, this.offset).subscribe({
-      next: (data) => {
-        this.products = data || [];
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'Could not load products';
-        this.loading = false;
-      }
-    });
+    this.productService.getAll(this.limit, this.offset)
+      .pipe(take(1))
+      .subscribe({
+        next: (data) => {
+          this.products = [...(data ?? [])];
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.log('error:', err);
+          this.error = 'Could not load products';
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   nextPage(): void {

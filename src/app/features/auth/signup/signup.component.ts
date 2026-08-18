@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
-export class Signup {
+export class SignupComponent {
   data: SignupRequest = {
     name: '',
     email: '',
