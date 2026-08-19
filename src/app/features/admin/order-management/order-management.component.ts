@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { OrderService } from '../../../core/services/order.service';
@@ -9,7 +8,7 @@ import { Order } from '../../../shared/models/models';
 @Component({
   selector: 'app-order-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './order-management.html',
   styleUrl: './order-management.css'
 })
@@ -21,27 +20,33 @@ export class OrderManagementComponent implements OnInit {
   limit: number = 10;
   offset: number = 0;
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadOrders();
   }
 
   loadOrders(): void {
-    this.loading = true;
     this.orderService.getAll(this.limit, this.offset).subscribe({
       next: (data) => {
-        this.orders = data || [];
-        this.loading = false;
+        this.orders = [...(data ?? [])];
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Could not load orders';
-        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
-  updateStatus(id: number, status: string): void {
+  updateStatus(id: number, event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const status = select.value;
+    if (!status) return;
+
     this.orderService.updateStatus(id, status).subscribe({
       next: () => {
         this.success = `Order #${id} status updated to ${status}`;

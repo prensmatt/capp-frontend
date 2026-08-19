@@ -24,6 +24,12 @@ export class ProductDetailComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  getImageUrl(imageUrl: string): string {
+  if (!imageUrl) return 'https://placehold.co/400x300?text=No+Image';
+  if (imageUrl.startsWith('http')) return imageUrl;
+  return `http://localhost:8080${imageUrl}`;
+}
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {

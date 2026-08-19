@@ -4,49 +4,60 @@
     <a routerLink="/admin/products">Products</a>
   </div>
 
-  <div class="success" *ngIf="success">{{ success }}</div>
-  <div class="error" *ngIf="error">{{ error }}</div>
+  @if (success) {
+    <div class="success">{{ success }}</div>
+  }
 
-  <div class="loading" *ngIf="loading">Loading orders...</div>
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
 
-  <table *ngIf="!loading && orders.length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>User ID</th>
-        <th>Total Price</th>
-        <th>Status</th>
-        <th>Created At</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let order of orders">
-        <td>{{ order.id }}</td>
-        <td>{{ order.user_id }}</td>
-        <td>${{ order.total_price | number:'1.2-2' }}</td>
-        <td>
-          <span class="status" [class]="'status-' + order.status">
-            {{ order.status }}
-          </span>
-        </td>
-        <td>{{ order.created_at | date:'short' }}</td>
-        <td>
-          <select (change)="updateStatus(order.id, $any($event.target).value)">
-            <option value="">Change status</option>
-            <option value="pending">Pending</option>
-            <option value="paid">Paid</option>
-            <option value="shipped">Shipped</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  @if (loading) {
+    <div class="loading">Loading orders...</div>
+  }
 
-  <div class="empty" *ngIf="!loading && orders.length === 0">
-    No orders yet.
-  </div>
+  @if (!loading && orders.length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Total Price</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of orders; track order.id) {
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.user_id }}</td>
+            <td>${{ order.total_price | number:'1.2-2' }}</td>
+            <td>
+              <span class="status" [class]="'status-' + order.status">
+                {{ order.status }}
+              </span>
+            </td>
+            <td>{{ order.created_at | date:'short' }}</td>
+            <td>
+              <select (change)="updateStatus(order.id, $event)">
+                <option value="">Change status</option>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+                <option value="shipped">Shipped</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (!loading && orders.length === 0) {
+    <div class="empty">No orders yet.</div>
+  }
 
   <div class="pagination">
     <button (click)="prevPage()" [disabled]="offset === 0">Previous</button>

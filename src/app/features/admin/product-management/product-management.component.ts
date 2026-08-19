@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../shared/models/models';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './product-management.html',
   styleUrl: './product-management.css'
 })
@@ -17,9 +18,10 @@ export class ProductManagementComponent implements OnInit {
   loading: boolean = false;
   error: string = '';
   success: string = '';
-
   showForm: boolean = false;
   editingProduct: Product | null = null;
+  selectedFile: File | null = null;
+  uploadingId: number | null = null;
 
   form = {
     name: '',
@@ -30,22 +32,24 @@ export class ProductManagementComponent implements OnInit {
     category_id: 1
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
   }
 
   loadProducts(): void {
-    this.loading = true;
     this.productService.getAll().subscribe({
       next: (data) => {
-        this.products = data || [];
-        this.loading = false;
+        this.products = [...(data ?? [])];
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Could not load products';
-        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -96,7 +100,6 @@ export class ProductManagementComponent implements OnInit {
 
   deleteProduct(id: number): void {
     if (!confirm('Are you sure you want to delete this product?')) return;
-
     this.productService.delete(id).subscribe({
       next: () => {
         this.success = 'Product deleted';
@@ -109,5 +112,35 @@ export class ProductManagementComponent implements OnInit {
   cancelForm(): void {
     this.showForm = false;
     this.editingProduct = null;
+  }
+
+  onFileSelected(event: Event, productId: number): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      this.uploadingId = productId;
+      this.uploadImage(productId, input.files[0]);
+    }
+  }
+
+  uploadImage(productId: number, file: File): void {
+    this.productService.uploadImage(productId, file).subscribe({
+      next: () => {
+        this.success = 'Image uploaded successfully';
+        this.selectedFile = null;
+        this.uploadingId = null;
+        this.loadProducts();
+      },
+      error: () => {
+        this.error = 'Could not upload image';
+        this.uploadingId = null;
+      }
+    });
+  }
+
+  getImageUrl(imageUrl: string): string {
+    if (!imageUrl) return 'https://placehold.co/60x60?text=No+Image';
+    if (imageUrl.startsWith('http')) return imageUrl;
+    return `http://localhost:8080${imageUrl}`;
   }
 }

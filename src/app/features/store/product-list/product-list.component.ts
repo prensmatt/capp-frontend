@@ -56,4 +56,9 @@ export class ProductListComponent implements OnInit {
       this.loadProducts();
     }
   }
+  getImageUrl(imageUrl: string): string {
+  if (!imageUrl) return 'https://placehold.co/280x200?text=No+Image';
+  if (imageUrl.startsWith('http')) return imageUrl;
+  return `http://localhost:8080${imageUrl}`;
+}
 }
