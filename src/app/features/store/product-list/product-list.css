@@ -15,14 +15,6 @@ h1 {
   color: #333;
 }
 
-.btn-login {
-  padding: 0.5rem 1rem;
-  background: #007bff;
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-}
-
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
