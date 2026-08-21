@@ -7,7 +7,7 @@
     <a routerLink="/products">Products</a>
 
     @if (authService.isLoggedIn() && authService.isAdmin()) {
-      <a routerLink="/admin/products">Admin Panel</a>
+      <a routerLink="/admin/orders">Orders</a>
     }
 
     @if (authService.isLoggedIn()) {
