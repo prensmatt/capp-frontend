@@ -56,3 +56,12 @@ export interface SignupRequest{
   password: string;
   role: string;
 }
+
+export interface CreateOrderRequest {
+  user_id: number;
+  items: {
+    product_id: number;
+    quantity: number;
+    unit_price: number;
+  }[];
+}

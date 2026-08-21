@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { environment } from "../../../environments/environment";
-import { Order } from "../../shared/models/models"
+import { Order, CreateOrderRequest } from "../../shared/models/models"
 
 @Injectable({
   providedIn: 'root'
@@ -25,14 +25,14 @@ export class OrderService{
     return this.http.get<Order>(`${this.apiUrl}/orders/${id}`);
   }
 
-  create(order: Partial<Order>): Observable<Order>{
-    return this.http.post<Order>(`${this.apiUrl}/orders`, order);
-  }
-
   updateStatus(id: number, status: string): Observable<{status: string}>{
     return this.http.patch<{status: string}>(
       `${this.apiUrl}/orders/${id}/status`,
       {status}
     );
+  }
+
+  create(order: CreateOrderRequest): Observable<Order> {
+    return this.http.post<Order>(`${this.apiUrl}/orders`, order);
   }
 }
