@@ -17,7 +17,7 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   loading: boolean = false;
   error: string = '';
-  limit: number = 10;
+  limit: number = 12;
   offset: number = 0;
 
   constructor(

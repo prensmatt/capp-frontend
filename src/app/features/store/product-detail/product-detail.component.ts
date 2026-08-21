@@ -79,8 +79,15 @@ export class ProductDetailComponent implements OnInit {
     this.error = '';
     this.success = '';
 
+    const currentUserId = this.authService.getUserId(); 
+
+    if (!currentUserId) {
+      alert('Please log in to place an order.');
+      return;
+    }
+
     const order: CreateOrderRequest = {
-      user_id: 1,
+      user_id: currentUserId,
       items: [
         {
           product_id: this.product.id,

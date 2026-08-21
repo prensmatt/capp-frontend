@@ -14,7 +14,7 @@ export class OrderService{
 
   constructor(private http: HttpClient) {}
 
-  getAll(limit: number = 10, offset: number = 0): Observable<Order[]>{
+  getAll(limit: number = 12, offset: number = 0): Observable<Order[]>{
     const params = new HttpParams()
     .set('limit', limit.toString())
     .set('offset', offset.toString());

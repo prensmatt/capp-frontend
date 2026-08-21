@@ -42,6 +42,18 @@ export class AuthService {
     return localStorage.getItem('role') === 'admin';
   }
 
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.user_id ?? payload.userId ?? payload.sub ?? null;
+    } catch {
+      return null;
+    }
+  }
+
   private getRoleFromToken(token: string): string{
     try{
       const payload = JSON.parse(atob(token.split('.')[1]));
