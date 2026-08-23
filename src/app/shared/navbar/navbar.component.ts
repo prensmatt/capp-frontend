@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,10 +13,19 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './navbar.css'
 })
 export class NavbarComponent {
+  cartCount: number = 0;
+
   constructor(
     public authService: AuthService,
+    public cartService: CartService,
     private router: Router
   ) {}
+
+  ngOnInit(): void {
+    this.cartService.cart$.subscribe(items => {
+      this.cartCount = this.cartService.getCount();
+    });
+  }
 
   logout(): void {
     this.authService.logout();

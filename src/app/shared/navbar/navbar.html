@@ -11,6 +11,15 @@
       <a routerLink="/products">Products</a>
     }
 
+    @if (authService.isLoggedIn() && !authService.isAdmin()) {
+      <a routerLink="/cart" class="cart-icon">
+        🛒
+        @if (cartCount > 0) {
+          <span class="cart-badge">{{ cartCount }}</span>
+        }
+      </a>
+    }
+
     @if (authService.isLoggedIn()) {
       <button (click)="logout()" class="btn-logout">Logout</button>
     } @else {

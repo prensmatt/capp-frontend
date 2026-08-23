@@ -4,12 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../shared/models/models';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-management.html',
   styleUrl: './product-management.css'
 })
