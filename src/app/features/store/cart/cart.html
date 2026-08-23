@@ -1,0 +1,64 @@
+<div class="container">
+  <h1>Your Cart</h1>
+
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
+
+  @if (success) {
+    <div class="success">{{ success }}</div>
+  }
+
+  @if (items.length === 0 && !success) {
+    <div class="empty">
+      <p>Your cart is empty.</p>
+      <a routerLink="/products" class="btn-shop">Continue Shopping</a>
+    </div>
+  }
+
+  @if (items.length > 0) {
+    <div class="cart-items">
+      @for (item of items; track item.product.id) {
+        <div class="cart-item">
+          <img
+            [src]="getImageUrl(item.product.image_url)"
+            [alt]="item.product.name"
+            class="item-image"
+          />
+          <div class="item-info">
+            <h3>{{ item.product.name }}</h3>
+            <p class="item-price">${{ item.product.price | number:'1.2-2' }}</p>
+          </div>
+          <div class="item-quantity">
+            <button (click)="updateQuantity(item.product.id, item.quantity - 1)">-</button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="updateQuantity(item.product.id, item.quantity + 1)">+</button>
+          </div>
+          <div class="item-total">
+            ${{ (item.product.price * item.quantity) | number:'1.2-2' }}
+          </div>
+          <button (click)="removeItem(item.product.id)" class="btn-remove">✕</button>
+        </div>
+      }
+    </div>
+
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span>Total Items:</span>
+        <span>{{ cartService.getCount() }}</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total Price:</span>
+        <span>${{ cartService.getTotal() | number:'1.2-2' }}</span>
+      </div>
+      <button
+        (click)="placeOrder()"
+        [disabled]="loading"
+        class="btn-order"
+      >
+        {{ loading ? 'Placing Order...' : 'Place Order' }}
+      </button>
+      <a routerLink="/products" class="btn-continue">Continue Shopping</a>
+    </div>
+  }
+</div>
