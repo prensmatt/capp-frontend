@@ -48,13 +48,14 @@
             Total: <strong>${{ (product.price * quantity) | number:'1.2-2' }}</strong>
           </div>
 
-          <button
-            class="btn-buy"
-            (click)="placeOrder()"
-            [disabled]="ordering"
-          >
-            {{ ordering ? 'Placing Order...' : 'Place Order' }}
-          </button>
+          <div class="btn-group">
+            <button class="btn-buy" (click)="addToCart()">
+              Add to Cart 🛒
+            </button>
+            <button class="btn-cart" (click)="goToCart()">
+              View Cart
+            </button>
+          </div>
         } @else {
           <button class="btn-buy" disabled>Out of Stock</button>
         }

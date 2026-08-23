@@ -9,6 +9,11 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'cart',
+    loadComponent: () => import('./features/store/cart/cart.component')
+      .then(m => m.CartComponent)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component')
     .then(m => m.LoginComponent)
