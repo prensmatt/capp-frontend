@@ -4,10 +4,11 @@
   </div>
 
   <div class="navbar-links">
-    <a routerLink="/products">Products</a>
-
     @if (authService.isLoggedIn() && authService.isAdmin()) {
-      <a routerLink="/admin/orders">Orders</a>
+      <a routerLink="/admin/products">Admin Products</a>
+      <a routerLink="/admin/orders">Admin Orders</a>
+    } @else {
+      <a routerLink="/products">Products</a>
     }
 
     @if (authService.isLoggedIn()) {

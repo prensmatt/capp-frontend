@@ -78,7 +78,11 @@ export class ProductManagementComponent implements OnInit {
     this.success = '';
 
     if (this.editingProduct) {
-      this.productService.update(this.editingProduct.id, this.form).subscribe({
+      const updateData = {
+        ...this.form,
+        image_url: this.editingProduct.image_url  // preserve existing image
+      };
+      this.productService.update(this.editingProduct.id, updateData).subscribe({
         next: () => {
           this.success = 'Product updated successfully';
           this.showForm = false;
