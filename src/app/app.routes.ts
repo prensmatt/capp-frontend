@@ -34,6 +34,12 @@ export const routes: Routes = [
     .then(m=> m.ProductDetailComponent)   
   },
   {
+    path: 'orders',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/store/order-history/order-history.component')
+      .then(m => m.OrderHistoryComponent)
+  },
+  {
     path: 'admin',
     canActivate: [AdminGuard],
     children: [
