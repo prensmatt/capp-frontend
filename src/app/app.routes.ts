@@ -56,6 +56,12 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'admin/categories',
+    canActivate: [AdminGuard],
+    loadComponent: () => import('./features/admin/category-management/category-management.component')
+      .then(m => m.CategoryManagementComponent)
+  },
+  {
     path: '**',
     redirectTo: 'products'
   }
