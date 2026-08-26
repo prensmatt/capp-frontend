@@ -6,6 +6,7 @@ import { RouterLink, Router } from '@angular/router';
 import { CartService, CartItem } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { CreateOrderRequest } from '../../../shared/models/models';
 
 @Component({
   selector: 'app-cart',
@@ -68,8 +69,14 @@ export class CartComponent implements OnInit {
     this.error = '';
     this.success = '';
 
-    const order = {
-      user_id: 1,
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      this.error = 'Could not identify user. Please login again.';
+      return;
+    }
+
+    const order: CreateOrderRequest = {
+      user_id: userId as number,
       items: this.items.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity,

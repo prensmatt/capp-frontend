@@ -146,4 +146,12 @@ export class ProductManagementComponent implements OnInit {
     if (imageUrl.startsWith('http')) return imageUrl;
     return `http://localhost:8080${imageUrl}`;
   }
+
+  generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-');
+}
 }
