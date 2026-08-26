@@ -12,6 +12,8 @@
     }
 
     @if (authService.isLoggedIn() && !authService.isAdmin()) {
+      <a routerLink="/products">Products</a>
+      <a routerLink="/orders">My Orders</a>
       <a routerLink="/cart" class="cart-icon">
         🛒
         @if (cartCount > 0) {
