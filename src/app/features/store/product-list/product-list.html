@@ -3,12 +3,25 @@
     <h1>Products</h1>
   </div>
 
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+      placeholder="Search products..."
+      class="search-input"
+    />
+    @if (searchQuery) {
+      <button (click)="searchQuery = ''; applyFilter()" class="btn-clear">✕</button>
+    }
+  </div>
+
   @if (error) {
     <div class="error">{{ error }}</div>
   }
 
   <div class="products-grid">
-    @for (product of products; track product.id) {
+    @for (product of filteredProducts; track product.id) {
       <div class="product-card">
         <img
           [src]="getImageUrl(product.image_url)"
@@ -28,7 +41,13 @@
         </div>
       </div>
     } @empty {
-      <div class="empty">No products found.</div>
+      <div class="empty">
+        @if (searchQuery) {
+          No products found for "{{ searchQuery }}"
+        } @else {
+          No products found.
+        }
+      </div>
     }
   </div>
 
