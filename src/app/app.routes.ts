@@ -40,27 +40,26 @@ export const routes: Routes = [
       .then(m => m.OrderHistoryComponent)
   },
   {
-    path: 'admin',
-    canActivate: [AdminGuard],
-    children: [
-      {
-        path: 'products',
-        loadComponent: ()=>import('./features/admin/product-management/product-management.component')
-        .then(m=>m.ProductManagementComponent)
-      },
-      {
-        path: 'orders',
-        loadComponent: ()=>import('./features/admin/order-management/order-management.component')
-        .then(m=>m.OrderManagementComponent)
-      }
-    ]
-  },
-  {
-    path: 'admin/categories',
-    canActivate: [AdminGuard],
-    loadComponent: () => import('./features/admin/category-management/category-management.component')
-      .then(m => m.CategoryManagementComponent)
-  },
+  path: 'admin',
+  canActivate: [AdminGuard],
+  children: [
+    {
+      path: 'products',
+      loadComponent: () => import('./features/admin/product-management/product-management.component')
+        .then(m => m.ProductManagementComponent)
+    },
+    {
+      path: 'orders',
+      loadComponent: () => import('./features/admin/order-management/order-management.component')
+        .then(m => m.OrderManagementComponent)
+    },
+    {
+      path: 'categories',
+      loadComponent: () => import('./features/admin/category-management/category-management.component')
+        .then(m => m.CategoryManagementComponent)
+    }
+  ]
+},
   {
     path: '**',
     redirectTo: 'products'
