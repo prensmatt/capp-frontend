@@ -5,7 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { take } from 'rxjs/operators';
 
 import { ProductService } from '../../../core/services/product.service';
-import { Product } from '../../../shared/models/models';
+import { Category, Product } from '../../../shared/models/models';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-product-list',
@@ -23,13 +24,18 @@ export class ProductListComponent implements OnInit {
   offset: number = 0;
   searchQuery: string = '';
 
+  categories: Category[] = [];
+  selectedCategoryId: number = 0;
+
   constructor(
     private productService: ProductService,
+    private categoryService: CategoryService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCategories();
   }
 
   loadProducts(): void {
@@ -49,17 +55,37 @@ export class ProductListComponent implements OnInit {
       });
   }
 
+  loadCategories(): void {
+    this.categoryService.getAll().subscribe({
+      next: (data) => {
+        this.categories = data ?? [];
+        this.cdr.detectChanges();
+      },
+      error: () => console.log('Could not load categories'),
+    });
+  }
+
   applyFilter(): void {
-    if (!this.searchQuery.trim()) {
-      this.filteredProducts = [...this.products];
-    } else {
+    let filtered = [...this.products];
+
+    if (this.searchQuery.trim()) {
       const query = this.searchQuery.toLowerCase();
-      this.filteredProducts = this.products.filter(p =>
+      filtered = filtered.filter(p =>
         p.name.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query)
       );
     }
+    if (this.selectedCategoryId > 0) {
+      filtered = filtered.filter(p => p.category_id === this.selectedCategoryId);
+    }
+
+    this.filteredProducts = filtered;
     this.cdr.detectChanges();
+  }
+
+  onCategoryFilter(categoryId: number): void {
+    this.selectedCategoryId = categoryId;
+    this.applyFilter();
   }
 
   onSearch(): void {
