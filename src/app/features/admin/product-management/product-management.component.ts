@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ProductService } from '../../../core/services/product.service';
-import { Product } from '../../../shared/models/models';
+import { Category, Product } from '../../../shared/models/models';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-product-management',
@@ -31,13 +32,17 @@ export class ProductManagementComponent implements OnInit {
     category_id: 1
   };
 
+  categories: Category[] = [];
+
   constructor(
     private productService: ProductService,
+    private categoryService: CategoryService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.loadCategories();
   }
 
   loadProducts(): void {
@@ -51,6 +56,19 @@ export class ProductManagementComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  loadCategories(): void {
+    this.categoryService.getAll().subscribe({
+      next: (data) => {
+        this.categories = [...(data ?? [])];
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.error = 'Could not load products';
+        this.cdr.detectChanges();
+      }
+    })
   }
 
   openCreateForm(): void {
