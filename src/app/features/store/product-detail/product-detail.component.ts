@@ -57,20 +57,41 @@ export class ProductDetailComponent implements OnInit {
     return `http://localhost:8080${imageUrl}`;
   }
 
+  // addToCart(): void {
+  //   if (!this.product) return;
+
+  //   if (this.quantity <= 0 || this.quantity > this.product.stock) {
+  //     this.error = `Please enter a valid quantity (1 - ${this.product.stock})`;
+  //     this.cdr.detectChanges();
+  //     return;
+  //   }
+
+  //   this.cartService.addToCart(this.product, this.quantity);
+  //   this.success = `${this.product.name} added to cart!`;
+  //   this.quantity = 1;
+  //   this.cdr.detectChanges();
+  // }
+
   addToCart(): void {
-    if (!this.product) return;
+  if (!this.product) return;
 
-    if (this.quantity <= 0 || this.quantity > this.product.stock) {
-      this.error = `Please enter a valid quantity (1 - ${this.product.stock})`;
-      this.cdr.detectChanges();
-      return;
-    }
-
-    this.cartService.addToCart(this.product, this.quantity);
-    this.success = `${this.product.name} added to cart!`;
-    this.quantity = 1;
+  if (this.quantity <= 0 || this.quantity > this.product.stock) {
+    this.error = `Please enter a valid quantity (1 - ${this.product.stock})`;
     this.cdr.detectChanges();
+    return;
   }
+
+  this.cartService.addToCart(this.product, this.quantity);
+  this.success = `${this.product.name} added to cart!`;
+  
+  this.product = {
+    ...this.product,
+    stock: this.product.stock - this.quantity
+  };
+  
+  this.quantity = 1;
+  this.cdr.detectChanges();
+}
 
   goToCart(): void {
     this.router.navigate(['/cart']);

@@ -86,11 +86,15 @@ export class CartComponent implements OnInit {
 
     this.orderService.create(order).subscribe({
       next: (data) => {
-        this.success = `Order #${data.id} placed successfully! Total: $${data.total_price}`;
-        this.cartService.clearCart();
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
+      this.success = `Order #${data.id} placed successfully! Total: $${data.total_price}`;
+      this.cartService.clearCart();
+      this.loading = false;
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.router.navigate(['/orders']);
+      }, 2000);
+    },
+      
       error: () => {
         this.error = 'Could not place order. Please try again.';
         this.loading = false;

@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { ProductService } from '../../../core/services/product.service';
 import { Category, Product } from '../../../shared/models/models';
 import { CategoryService } from '../../../core/services/category.service';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -29,14 +30,20 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private cartService: CartService,
     private categoryService: CategoryService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+  this.loadProducts();
+  this.loadCategories();
+  
+  // reload products when cart changes
+  this.cartService.cart$.subscribe(() => {
     this.loadProducts();
-    this.loadCategories();
-  }
+  });
+}
 
   loadProducts(): void {
     this.productService.getAll(this.limit, this.offset)
