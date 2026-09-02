@@ -66,22 +66,28 @@ export class ProductListComponent implements OnInit {
   }
 
   applyFilter(): void {
-    let filtered = [...this.products];
+  let filtered = [...this.products];
 
-    if (this.searchQuery.trim()) {
-      const query = this.searchQuery.toLowerCase();
-      filtered = filtered.filter(p =>
+  if (this.searchQuery.trim()) {
+    const query = this.searchQuery.toLowerCase();
+    filtered = filtered.filter(p => {
+      const category = this.categories.find(c => c.id === Number(p.category_id));
+      const categoryName = category ? category.name.toLowerCase() : '';
+      return (
         p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
+        p.description.toLowerCase().includes(query) ||
+        categoryName.includes(query)
       );
-    }
-    if (this.selectedCategoryId > 0) {
-      filtered = filtered.filter(p => p.category_id === this.selectedCategoryId);
-    }
-
-    this.filteredProducts = filtered;
-    this.cdr.detectChanges();
+    });
   }
+
+  if (this.selectedCategoryId > 0) {
+    filtered = filtered.filter(p => Number(p.category_id) === Number(this.selectedCategoryId));
+  }
+
+  this.filteredProducts = filtered;
+  this.cdr.detectChanges();
+}
 
   onCategoryFilter(categoryId: number): void {
     this.selectedCategoryId = categoryId;
