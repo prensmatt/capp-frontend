@@ -97,6 +97,7 @@ export class ProductManagementComponent implements OnInit {
     if (this.editingProduct) {
       const updateData = {
         ...this.form,
+        category_id: Number(this.form.category_id),  // force number
         image_url: this.editingProduct.image_url  // preserve existing image
       };
       this.productService.update(this.editingProduct.id, updateData).subscribe({
