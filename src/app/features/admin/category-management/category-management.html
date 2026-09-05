@@ -1,11 +1,7 @@
 <div class="container">
   <div class="header">
     <h1>Category Management</h1>
-    <div class="nav">
-      <a routerLink="/admin/products">Products</a>
-      <a routerLink="/admin/orders">Orders</a>
-      <button (click)="openCreateForm()" class="btn-create">+ New Category</button>
-    </div>
+    <button (click)="openCreateForm()" class="btn-create">+ New Category</button>
   </div>
 
   @if (success) {
@@ -54,6 +50,7 @@
   }
 
   @if (!loading && categories.length > 0) {
+    <!-- Desktop table -->
     <table>
       <thead>
         <tr>
@@ -77,6 +74,23 @@
         }
       </tbody>
     </table>
+
+    <!-- Mobile cards -->
+    <div class="mobile-cards">
+      @for (category of categories; track category.id) {
+        <div class="mobile-card">
+          <div class="mobile-card-info">
+            <h3>{{ category.name }}</h3>
+            <p>{{ category.slug }}</p>
+            <p class="category-id">ID: {{ category.id }}</p>
+          </div>
+          <div class="mobile-card-actions">
+            <button (click)="openEditForm(category)" class="btn-edit">Edit</button>
+            <button (click)="deleteCategory(category.id)" class="btn-delete">Delete</button>
+          </div>
+        </div>
+      }
+    </div>
   }
 
   @if (!loading && categories.length === 0) {

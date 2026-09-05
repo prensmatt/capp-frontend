@@ -14,6 +14,7 @@ import { CartService } from '../../core/services/cart.service';
 })
 export class NavbarComponent {
   cartCount: number = 0;
+  menuOpen: boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -25,6 +26,14 @@ export class NavbarComponent {
     this.cartService.cart$.subscribe(items => {
       this.cartCount = this.cartService.getCount();
     });
+  }
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
   }
 
   logout(): void {

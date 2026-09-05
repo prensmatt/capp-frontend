@@ -80,6 +80,7 @@
   }
 
   @if (!loading && products.length > 0) {
+    <!-- Desktop table -->
     <table>
       <thead>
         <tr>
@@ -122,6 +123,35 @@
         }
       </tbody>
     </table>
+
+    <!-- Mobile cards -->
+    <div class="mobile-cards">
+      @for (product of products; track product.id) {
+        <div class="mobile-card">
+          <img
+            [src]="getImageUrl(product.image_url)"
+            [alt]="product.name"
+          />
+          <div class="mobile-card-info">
+            <h3>{{ product.name }}</h3>
+            <p>${{ product.price | number:'1.2-2' }} · {{ product.stock }} in stock</p>
+          </div>
+          <div class="mobile-card-actions">
+            <button (click)="openEditForm(product)" class="btn-edit">Edit</button>
+            <button (click)="deleteProduct(product.id)" class="btn-delete">Delete</button>
+            <label class="btn-upload">
+              📷
+              <input
+                type="file"
+                accept="image/*"
+                style="display:none"
+                (change)="onFileSelected($event, product.id)"
+              />
+            </label>
+          </div>
+        </div>
+      }
+    </div>
   }
 
   @if (!loading && products.length === 0) {

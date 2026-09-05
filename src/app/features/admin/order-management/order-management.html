@@ -16,6 +16,7 @@
   }
 
   @if (!loading && orders.length > 0) {
+    <!-- Desktop table -->
     <table>
       <thead>
         <tr>
@@ -52,6 +53,31 @@
         }
       </tbody>
     </table>
+
+    <!-- Mobile cards -->
+    <div class="mobile-cards">
+      @for (order of orders; track order.id) {
+        <div class="mobile-card">
+          <div class="mobile-card-info">
+            <h3>Order #{{ order.id }}</h3>
+            <p>User #{{ order.user_id }} · ${{ order.total_price | number:'1.2-2' }}</p>
+            <p>{{ order.created_at | date:'short' }}</p>
+            <span class="status" [class]="'status-' + order.status">
+              {{ order.status }}
+            </span>
+          </div>
+          <div class="mobile-card-actions">
+            <select (change)="updateStatus(order.id, $event)">
+              <option value="">Change</option>
+              <option value="pending">Pending</option>
+              <option value="paid">Paid</option>
+              <option value="shipped">Shipped</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+      }
+    </div>
   }
 
   @if (!loading && orders.length === 0) {

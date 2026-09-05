@@ -1,20 +1,25 @@
 <nav class="navbar">
   <div class="navbar-brand">
-    <a routerLink="/products">🛍️ Capp Store</a>
+    <a routerLink="/products" (click)="closeMenu()">🛍️ Capp Store</a>
   </div>
 
-  <div class="navbar-links">
+  <button class="hamburger" (click)="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="navbar-links" [class.open]="menuOpen">
     @if (authService.isLoggedIn() && authService.isAdmin()) {
-      <a routerLink="/admin/products">Admin Products</a>
-      <a routerLink="/admin/orders">Admin Orders</a>
-      <a routerLink="/admin/categories">Categories</a>
+      <a routerLink="/admin/products" (click)="closeMenu()">Admin Products</a>
+      <a routerLink="/admin/orders" (click)="closeMenu()">Admin Orders</a>
+      <a routerLink="/admin/categories" (click)="closeMenu()">Categories</a>
     }
 
     @if (authService.isLoggedIn() && !authService.isAdmin()) {
-      <a routerLink="/products">Products</a>
-      <a routerLink="/orders">My Orders</a>
-      <a routerLink="/profile">Profile</a>
-      <a routerLink="/cart" class="cart-icon">
+      <a routerLink="/products" (click)="closeMenu()">Products</a>
+      <a routerLink="/profile" (click)="closeMenu()">Profile</a>
+      <a routerLink="/cart" class="cart-icon" (click)="closeMenu()">
         🛒
         @if (cartCount > 0) {
           <span class="cart-badge">{{ cartCount }}</span>
@@ -23,14 +28,14 @@
     }
 
     @if (!authService.isLoggedIn()) {
-      <a routerLink="/products">Products</a>
+      <a routerLink="/products" (click)="closeMenu()">Products</a>
     }
 
     @if (authService.isLoggedIn()) {
       <button (click)="logout()" class="btn-logout">Logout</button>
     } @else {
-      <a routerLink="/login" class="btn-nav-login">Login</a>
-      <a routerLink="/signup" class="btn-nav-signup">Sign Up</a>
+      <a routerLink="/login" class="btn-nav-login" (click)="closeMenu()">Login</a>
+      <a routerLink="/signup" class="btn-nav-signup" (click)="closeMenu()">Sign Up</a>
     }
   </div>
 </nav>
