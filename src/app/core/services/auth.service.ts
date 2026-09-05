@@ -63,4 +63,19 @@ export class AuthService {
       return 'customer';
     }
   }
+
+  public getUserInfo(): { user_id: number; role: string } | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return {
+        user_id: payload.user_id,
+        role: payload.role || 'customer'
+      };
+    } catch {
+      return null;
+    }
+  }
 }

@@ -1,0 +1,22 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
+import { AuthService } from '../../../core/services/auth.service';
+
+@Component({
+  selector: 'app-profile',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './profile.html',
+  styleUrl: './profile.css'
+})
+export class ProfileComponent implements OnInit {
+  userInfo: { user_id: number; role: string } | null = null;
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.userInfo = this.authService.getUserInfo();
+  }
+}

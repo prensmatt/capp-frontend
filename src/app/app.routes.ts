@@ -9,6 +9,12 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/store/profile/profile.component')
+      .then(m => m.ProfileComponent)
+  },
+  {
     path: 'cart',
     loadComponent: () => import('./features/store/cart/cart.component')
       .then(m => m.CartComponent)
