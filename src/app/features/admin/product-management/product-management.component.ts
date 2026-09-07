@@ -73,7 +73,7 @@ export class ProductManagementComponent implements OnInit {
 
   openCreateForm(): void {
     this.editingProduct = null;
-    this.form = { name: '', slug: '', description: '', price: 0, stock: 0, category_id: 1 };
+    this.form = { name: '', slug: '', description: '', price: 0, stock: 0, category_id: 0 };
     this.showForm = true;
   }
 
@@ -94,11 +94,15 @@ export class ProductManagementComponent implements OnInit {
     this.error = '';
     this.success = '';
 
+    const payload = {
+      ...this.form,
+      category_id: Number(this.form.category_id)
+    };
+
     if (this.editingProduct) {
       const updateData = {
-        ...this.form,
-        category_id: Number(this.form.category_id),  // force number
-        image_url: this.editingProduct.image_url  // preserve existing image
+        ...payload,
+        image_url: this.editingProduct.image_url
       };
       this.productService.update(this.editingProduct.id, updateData).subscribe({
         next: () => {
@@ -109,7 +113,7 @@ export class ProductManagementComponent implements OnInit {
         error: () => this.error = 'Could not update product'
       });
     } else {
-      this.productService.create(this.form).subscribe({
+      this.productService.create(payload).subscribe({
         next: () => {
           this.success = 'Product created successfully';
           this.showForm = false;
