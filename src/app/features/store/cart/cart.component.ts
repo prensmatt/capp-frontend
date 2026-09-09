@@ -95,9 +95,18 @@ export class CartComponent implements OnInit {
       }, 2000);
     },
       
-      error: () => {
-        this.error = 'Could not place order. Please try again.';
+      error: (err) => {
         this.loading = false;
+        if (err.status === 422) {
+          this.error = 'One or more items are out of stock. Please update your cart.';
+        } else if (err.status === 401) {
+          this.error = 'Your session has expired. Please login again.';
+          setTimeout(() => this.router.navigate(['/login']), 2000);
+        } else if (err.status === 400) {
+          this.error = 'Invalid order data. Please check your cart and try again.';
+        } else {
+          this.error = 'Could not place order. Please try again.';
+        }
         this.cdr.detectChanges();
       }
     });
