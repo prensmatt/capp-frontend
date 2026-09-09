@@ -1,20 +1,22 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { ProductService } from '../../../core/services/product.service';
-import { Category, Product } from '../../../shared/models/models';
 import { CategoryService } from '../../../core/services/category.service';
+import { Product, Category } from '../../../shared/models/models';
 
 @Component({
   selector: 'app-product-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './product-management.html',
   styleUrl: './product-management.css'
 })
 export class ProductManagementComponent implements OnInit {
   products: Product[] = [];
+  categories: Category[] = [];
   loading: boolean = false;
   error: string = '';
   success: string = '';
@@ -29,10 +31,8 @@ export class ProductManagementComponent implements OnInit {
     description: '',
     price: 0,
     stock: 0,
-    category_id: 1
+    category_id: 0
   };
-
-  categories: Category[] = [];
 
   constructor(
     private productService: ProductService,
@@ -61,20 +61,19 @@ export class ProductManagementComponent implements OnInit {
   loadCategories(): void {
     this.categoryService.getAll().subscribe({
       next: (data) => {
-        this.categories = [...(data ?? [])];
+        this.categories = data ?? [];
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.error = 'Could not load products';
-        this.cdr.detectChanges();
-      }
-    })
+      error: () => this.error = 'Could not load categories'
+    });
   }
 
   openCreateForm(): void {
     this.editingProduct = null;
     this.form = { name: '', slug: '', description: '', price: 0, stock: 0, category_id: 0 };
     this.showForm = true;
+    this.error = '';
+    this.success = '';
   }
 
   openEditForm(product: Product): void {
@@ -88,20 +87,47 @@ export class ProductManagementComponent implements OnInit {
       category_id: product.category_id
     };
     this.showForm = true;
+    this.error = '';
+    this.success = '';
+  }
+
+  generateSlug(name: string): string {
+    return name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-');
   }
 
   onSubmit(): void {
     this.error = '';
     this.success = '';
 
-    const payload = {
-      ...this.form,
-      category_id: Number(this.form.category_id)
-    };
+    if (!this.form.name.trim()) {
+      this.error = 'Product name is required.';
+      return;
+    }
+    if (!this.form.slug.trim()) {
+      this.error = 'Slug is required.';
+      return;
+    }
+    if (this.form.price <= 0) {
+      this.error = 'Price must be greater than 0.';
+      return;
+    }
+    if (this.form.stock < 0) {
+      this.error = 'Stock cannot be negative.';
+      return;
+    }
+    if (!this.form.category_id || this.form.category_id === 0) {
+      this.error = 'Please select a category.';
+      return;
+    }
 
     if (this.editingProduct) {
       const updateData = {
-        ...payload,
+        ...this.form,
+        category_id: Number(this.form.category_id),
         image_url: this.editingProduct.image_url
       };
       this.productService.update(this.editingProduct.id, updateData).subscribe({
@@ -113,7 +139,10 @@ export class ProductManagementComponent implements OnInit {
         error: () => this.error = 'Could not update product'
       });
     } else {
-      this.productService.create(payload).subscribe({
+      this.productService.create({
+        ...this.form,
+        category_id: Number(this.form.category_id)
+      }).subscribe({
         next: () => {
           this.success = 'Product created successfully';
           this.showForm = false;
@@ -138,6 +167,8 @@ export class ProductManagementComponent implements OnInit {
   cancelForm(): void {
     this.showForm = false;
     this.editingProduct = null;
+    this.error = '';
+    this.success = '';
   }
 
   onFileSelected(event: Event, productId: number): void {
@@ -169,12 +200,4 @@ export class ProductManagementComponent implements OnInit {
     if (imageUrl.startsWith('http')) return imageUrl;
     return `http://localhost:8080${imageUrl}`;
   }
-
-  generateSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-');
-}
 }

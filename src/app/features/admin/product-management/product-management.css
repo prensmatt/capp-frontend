@@ -277,3 +277,14 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+.required {
+  color: #dc3545;
+  margin-left: 2px;
+}
+
+.optional {
+  color: #999;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
