@@ -16,6 +16,30 @@
     }
   </div>
 
+  <div class="price-filter">
+  <span class="filter-label">Price:</span>
+  <input
+    type="number"
+    [(ngModel)]="minPrice"
+    (input)="onPriceFilter()"
+    placeholder="Min"
+    class="price-input"
+    min="0"
+  />
+  <span>—</span>
+  <input
+    type="number"
+    [(ngModel)]="maxPrice"
+    (input)="onPriceFilter()"
+    placeholder="Max"
+    class="price-input"
+    min="0"
+  />
+  @if (searchQuery || selectedCategoryId > 0 || minPrice > 0 || maxPrice < 999999) {
+    <button (click)="clearFilters()" class="btn-clear-all">Clear All</button>
+  }
+</div>
+
   @if (error) {
     <div class="error">{{ error }}</div>
   }

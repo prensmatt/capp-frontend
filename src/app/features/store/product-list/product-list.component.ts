@@ -19,11 +19,14 @@ import { CartService } from '../../../core/services/cart.service';
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
+
   loading: boolean = false;
   error: string = '';
   limit: number = 12;
   offset: number = 0;
   searchQuery: string = '';
+  minPrice: number = 0;
+  maxPrice: number = 999999;
 
   categories: Category[] = [];
   selectedCategoryId: number = 0;
@@ -73,28 +76,48 @@ export class ProductListComponent implements OnInit {
   }
 
   applyFilter(): void {
-  let filtered = [...this.products];
+    let filtered = [...this.products];
 
-  if (this.searchQuery.trim()) {
-    const query = this.searchQuery.toLowerCase();
-    filtered = filtered.filter(p => {
-      const category = this.categories.find(c => c.id === Number(p.category_id));
-      const categoryName = category ? category.name.toLowerCase() : '';
-      return (
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query) ||
-        categoryName.includes(query)
-      );
-    });
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(p => {
+        const category = this.categories.find(c => c.id === Number(p.category_id));
+        const categoryName = category ? category.name.toLowerCase() : '';
+        return (
+          p.name.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query) ||
+          categoryName.includes(query)
+        );
+      });
+    }
+
+    if (this.selectedCategoryId > 0) {
+      filtered = filtered.filter(p => Number(p.category_id) === Number(this.selectedCategoryId));
+    }
+
+    if (this.minPrice > 0) {
+      filtered = filtered.filter(p => p.price >= this.minPrice);
+    }
+
+    if (this.maxPrice < 999999) {
+      filtered = filtered.filter(p => p.price <= this.maxPrice);
+    }
+
+    this.filteredProducts = filtered;
+    this.cdr.detectChanges();
   }
 
-  if (this.selectedCategoryId > 0) {
-    filtered = filtered.filter(p => Number(p.category_id) === Number(this.selectedCategoryId));
+  onPriceFilter(): void {
+    this.applyFilter();
   }
 
-  this.filteredProducts = filtered;
-  this.cdr.detectChanges();
-}
+  clearFilters(): void {
+    this.searchQuery = '';
+    this.selectedCategoryId = 0;
+    this.minPrice = 0;
+    this.maxPrice = 999999;
+    this.applyFilter();
+  }
 
   onCategoryFilter(categoryId: number): void {
     this.selectedCategoryId = categoryId;
