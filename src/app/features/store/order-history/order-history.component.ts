@@ -33,12 +33,10 @@ export class OrderHistoryComponent implements OnInit {
 
   loadOrders(): void {
     this.loading = true;
-    this.orderService.getAll().subscribe({
+    this.orderService.getMyOrders().subscribe({
       next: (data) => {
-        const userId = this.authService.getUserId();
-        this.orders = [...(data ?? [])].filter(o => o.user_id === userId);
+        this.orders = [...(data ?? [])];
 
-        // fetch full details for each order to get items
         let loaded = 0;
         if (this.orders.length === 0) {
           this.loading = false;
