@@ -37,9 +37,19 @@
             <div class="order-items">
               @for (item of order.items; track item.id) {
                 <div class="order-item">
-                  <span>Product #{{ item.product_id }}</span>
-                  <span>x{{ item.quantity }}</span>
-                  <span>${{ item.unit_price | number:'1.2-2' }}</span>
+                  <img
+                    [src]="getProductImage(item.product_id)"
+                    [alt]="getProductName(item.product_id)"
+                    class="item-image"
+                  />
+                  <div class="item-details">
+                    <span class="item-name">{{ getProductName(item.product_id) }}</span>
+                    <span class="item-qty">x{{ item.quantity }}</span>
+                  </div>
+                  <span class="item-price">${{ item.unit_price | number:'1.2-2' }}</span>
+                  <span class="item-subtotal">
+                    ${{ (item.unit_price * item.quantity) | number:'1.2-2' }}
+                  </span>
                 </div>
               }
             </div>

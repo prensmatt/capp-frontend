@@ -58,7 +58,6 @@ export interface SignupRequest{
 }
 
 export interface CreateOrderRequest {
-  user_id: number;
   items: {
     product_id: number;
     quantity: number;

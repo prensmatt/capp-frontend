@@ -60,23 +60,31 @@ export class CartComponent implements OnInit {
       return;
     }
 
-    if (this.items.length === 0) {
-      this.error = 'Your cart is empty';
-      return;
-    }
-
-    this.loading = true;
-    this.error = '';
-    this.success = '';
-
     const userId = this.authService.getUserId();
     if (!userId) {
       this.error = 'Could not identify user. Please login again.';
       return;
     }
 
+    if (this.items.length === 0) {
+      this.error = 'Your cart is empty';
+      return;
+    }
+
+    // validate quantities
+    for (const item of this.items) {
+      if (item.quantity > item.product.stock) {
+        this.error = `"${item.product.name}" only has ${item.product.stock} items left. Please update quantity.`;
+        this.cdr.detectChanges();
+        return;
+      }
+    }
+
+    this.loading = true;
+    this.error = '';
+    this.success = '';
+
     const order: CreateOrderRequest = {
-      user_id: userId as number,
       items: this.items.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity,
@@ -86,15 +94,14 @@ export class CartComponent implements OnInit {
 
     this.orderService.create(order).subscribe({
       next: (data) => {
-      this.success = `Order #${data.id} placed successfully! Total: $${data.total_price}`;
-      this.cartService.clearCart();
-      this.loading = false;
-      this.cdr.detectChanges();
-      setTimeout(() => {
-        this.router.navigate(['/orders']);
-      }, 2000);
-    },
-      
+        this.success = `Order #${data.id} placed successfully! Total: $${data.total_price}`;
+        this.cartService.clearCart();
+        this.loading = false;
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.router.navigate(['/orders']);
+        }, 2000);
+      },
       error: (err) => {
         this.loading = false;
         if (err.status === 422) {
