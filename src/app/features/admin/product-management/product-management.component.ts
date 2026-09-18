@@ -16,6 +16,8 @@ import { Product, Category } from '../../../shared/models/models';
 })
 export class ProductManagementComponent implements OnInit {
   products: Product[] = [];
+  filteredProducts: Product[] = [];
+  pagedProducts: Product[] = [];
   categories: Category[] = [];
   loading: boolean = false;
   error: string = '';
@@ -24,6 +26,14 @@ export class ProductManagementComponent implements OnInit {
   editingProduct: Product | null = null;
   selectedFile: File | null = null;
   uploadingId: number | null = null;
+
+  // Search
+  searchTerm: string = '';
+
+  // Pagination
+  pageSize: number = 20;
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   form = {
     name: '',
@@ -46,13 +56,17 @@ export class ProductManagementComponent implements OnInit {
   }
 
   loadProducts(): void {
+    this.loading = true;
     this.productService.getAll().subscribe({
       next: (data) => {
         this.products = [...(data ?? [])];
+        this.loading = false;
+        this.applyFilter();
         this.cdr.detectChanges();
       },
       error: () => {
         this.error = 'Could not load products';
+        this.loading = false;
         this.cdr.detectChanges();
       }
     });
@@ -66,6 +80,77 @@ export class ProductManagementComponent implements OnInit {
       },
       error: () => this.error = 'Could not load categories'
     });
+  }
+
+  // --- Search ---
+  onSearchChange(): void {
+    this.currentPage = 1;
+    this.applyFilter();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.currentPage = 1;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    const term = this.searchTerm.trim().toLowerCase();
+
+    this.filteredProducts = term
+      ? this.products.filter(p => {
+          const categoryName =
+            this.categories
+              .find(c => c.id === p.category_id)
+              ?.name
+              ?.toLowerCase() || '';
+
+          return (
+            p.name?.toLowerCase().includes(term) ||
+            p.slug?.toLowerCase().includes(term) ||
+            p.description?.toLowerCase().includes(term) ||
+            categoryName.includes(term)
+          );
+        })
+      : this.products;
+
+    this.totalPages = Math.max(
+      1,
+      Math.ceil(this.filteredProducts.length / this.pageSize)
+    );
+
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    this.updatePagedProducts();
+  }
+  // --- Pagination ---
+  updatePagedProducts(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.pagedProducts = this.filteredProducts.slice(start, start + this.pageSize);
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagedProducts();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagedProducts();
+    }
+  }
+
+  get rangeStart(): number {
+    return this.filteredProducts.length === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.currentPage * this.pageSize, this.filteredProducts.length);
   }
 
   openCreateForm(): void {

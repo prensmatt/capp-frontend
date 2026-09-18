@@ -75,11 +75,32 @@
     </div>
   }
 
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      name="searchTerm"
+      (ngModelChange)="onSearchChange()"
+      placeholder="Search products by name, slug, description, category..."
+      class="search-input"
+    />
+    @if (searchTerm) {
+      <button type="button" (click)="clearSearch()" class="btn-clear-search">✕ Clear</button>
+    }
+  </div>
+
   @if (loading) {
     <div class="loading">Loading...</div>
   }
 
-  @if (!loading && products.length > 0) {
+  @if (!loading && filteredProducts.length > 0) {
+    <div class="results-info">
+      Showing {{ rangeStart }}–{{ rangeEnd }} of {{ filteredProducts.length }} product{{ filteredProducts.length === 1 ? '' : 's' }}
+      @if (searchTerm) {
+        <span> (filtered from {{ products.length }} total)</span>
+      }
+    </div>
+
     <!-- Desktop table -->
     <table>
       <thead>
@@ -93,7 +114,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (product of products; track product.id) {
+        @for (product of pagedProducts; track product.id) {
           <tr>
             <td>
               <img
@@ -126,7 +147,7 @@
 
     <!-- Mobile cards -->
     <div class="mobile-cards">
-      @for (product of products; track product.id) {
+      @for (product of pagedProducts; track product.id) {
         <div class="mobile-card">
           <img
             [src]="getImageUrl(product.image_url)"
@@ -152,6 +173,33 @@
         </div>
       }
     </div>
+
+    <!-- Pagination controls -->
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button
+          type="button"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+          class="btn-page"
+        >
+          ← Previous
+        </button>
+        <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="btn-page"
+        >
+          Next →
+        </button>
+      </div>
+    }
+  }
+
+  @if (!loading && filteredProducts.length === 0 && products.length > 0) {
+    <div class="empty">No products match "{{ searchTerm }}".</div>
   }
 
   @if (!loading && products.length === 0) {
