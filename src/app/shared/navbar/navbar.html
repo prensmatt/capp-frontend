@@ -33,6 +33,9 @@
 
     @if (authService.isLoggedIn()) {
       <button (click)="logout()" class="btn-logout">Logout</button>
+      <button (click)="toggleTheme()" class="btn-theme">
+        {{ isDark ? '☀️' : '🌙' }}
+      </button>
     } @else {
       <a routerLink="/login" class="btn-nav-login" (click)="closeMenu()">Login</a>
       <a routerLink="/signup" class="btn-nav-signup" (click)="closeMenu()">Sign Up</a>

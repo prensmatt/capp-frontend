@@ -111,6 +111,14 @@
   justify-content: center;
 }
 
+.btn-theme {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .hamburger {

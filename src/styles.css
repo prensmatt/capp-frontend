@@ -38,6 +38,114 @@ body {
     padding: 1rem !important;
   }
 }
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .navbar {
+  background: #0d0d1a;
+}
+
+body.dark-mode .product-card,
+body.dark-mode .order-card,
+body.dark-mode .form-card,
+body.dark-mode .login-box,
+body.dark-mode .signup-box,
+body.dark-mode .profile-card,
+body.dark-mode .cart-items,
+body.dark-mode .cart-summary,
+body.dark-mode table {
+  background: #1e1e2e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .order-header h3,
+body.dark-mode .cart-item h3,
+body.dark-mode .item-total,
+body.dark-mode .summary-row.total,
+body.dark-mode .summary-row,
+body.dark-mode .profile-card .info-row .label, 
+body.dark-mode .profile-card .info-row .value{
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .profile-card .info-row .value.role.role-customer{
+  color: #1e1e2e !important;
+}
+
+body.dark-mode .item-qty,
+body.dark-mode .item-name,
+body.dark-mode .item-price{
+  color: #e0e0e0;
+}
+
+body.dark-mode th {
+  background: #2a2a3e;
+  color: #ccc;
+}
+
+body.dark-mode td {
+  border-color: #333;
+  color: #e0e0e0;
+}
+
+body.dark-mode input,
+body.dark-mode .product-detail,
+body.dark-mode .order-total,
+body.dark-mode textarea,
+body.dark-mode select {
+  background: #2a2a3e;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+body.dark-mode .search-input {
+  background: #2a2a3e;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+body.dark-mode .product-info h3,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+  color: #e0e0e0;
+}
+
+body.dark-mode .description,
+body.dark-mode .order-date,
+body.dark-mode label,
+body.dark-mode .filter-label {
+  color: #aaa;
+}
+
+body.dark-mode .order-item,
+body.dark-mode .mobile-card {
+  background: #2a2a3e;
+}
+
+body.dark-mode .btn-category {
+  background: #1e1e2e;
+  border-color: #444;
+  color: #ccc;
+}
+
+body.dark-mode .btn-stock {
+  background: #1e1e2e;
+  border-color: #444;
+  color: #ccc;
+}
+
+body.dark-mode .pagination button {
+  background: #2a2a3e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .empty,
+body.dark-mode .loading {
+  color: #aaa;
+}
 
 router-outlet + * {
   animation: fadeIn 0.15s ease-in;
