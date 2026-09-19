@@ -148,16 +148,14 @@ export class ProductListComponent implements OnInit {
     return `http://localhost:8080${imageUrl}`;
   }
 
-  nextPage(): void {
+    nextPage(): void {
     this.offset += this.limit;
-    this.searchQuery = '';
     this.loadProducts();
   }
 
   prevPage(): void {
     if (this.offset >= this.limit) {
       this.offset -= this.limit;
-      this.searchQuery = '';
       this.loadProducts();
     }
   }
