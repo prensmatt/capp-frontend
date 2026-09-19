@@ -17,27 +17,48 @@
   </div>
 
   <div class="price-filter">
-  <span class="filter-label">Price:</span>
-  <input
-    type="number"
-    [(ngModel)]="minPrice"
-    (input)="onPriceFilter()"
-    placeholder="Min"
-    class="price-input"
-    min="0"
-  />
-  <span>—</span>
-  <input
-    type="number"
-    [(ngModel)]="maxPrice"
-    (input)="onPriceFilter()"
-    placeholder="Max"
-    class="price-input"
-    min="0"
-  />
-  @if (searchQuery || selectedCategoryId > 0 || minPrice > 0 || maxPrice < 999999) {
-    <button (click)="clearFilters()" class="btn-clear-all">Clear All</button>
-  }
+    <span class="filter-label">Price:</span>
+    <input
+      type="number"
+      [(ngModel)]="minPrice"
+      (input)="onPriceFilter()"
+      placeholder="Min"
+      class="price-input"
+      min="0"
+    />
+    <span>—</span>
+    <input
+      type="number"
+      [(ngModel)]="maxPrice"
+      (input)="onPriceFilter()"
+      placeholder="Max"
+      class="price-input"
+      min="0"
+    />
+    @if (searchQuery || selectedCategoryId > 0 || minPrice > 0 || maxPrice < 999999) {
+      <button (click)="clearFilters()" class="btn-clear-all">Clear All</button>
+    }
+</div>
+
+<div class="stock-filter">
+  <button
+    (click)="onStockFilter('all')"
+    [class.active]="stockFilter === 'all'"
+    class="btn-stock">
+    All
+  </button>
+  <button
+    (click)="onStockFilter('instock')"
+    [class.active]="stockFilter === 'instock'"
+    class="btn-stock btn-instock">
+    ✓ In Stock
+  </button>
+  <button
+    (click)="onStockFilter('outofstock')"
+    [class.active]="stockFilter === 'outofstock'"
+    class="btn-stock btn-outofstock">
+    ✕ Out of Stock
+  </button>
 </div>
 
   @if (error) {

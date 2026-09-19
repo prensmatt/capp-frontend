@@ -65,6 +65,13 @@ export class ProductListComponent implements OnInit {
       });
   }
 
+  stockFilter: string = 'all'; // 'all', 'instock', 'outofstock'
+
+  onStockFilter(filter: string): void {
+    this.stockFilter = filter;
+    this.applyFilter();
+  }
+
   loadCategories(): void {
     this.categoryService.getAll().subscribe({
       next: (data) => {
@@ -103,6 +110,12 @@ export class ProductListComponent implements OnInit {
       filtered = filtered.filter(p => p.price <= this.maxPrice);
     }
 
+    if (this.stockFilter === 'instock') {
+      filtered = filtered.filter(p => p.stock > 0);
+    } else if (this.stockFilter === 'outofstock') {
+      filtered = filtered.filter(p => p.stock === 0);
+    }
+
     this.filteredProducts = filtered;
     this.cdr.detectChanges();
   }
@@ -116,6 +129,7 @@ export class ProductListComponent implements OnInit {
     this.selectedCategoryId = 0;
     this.minPrice = 0;
     this.maxPrice = 999999;
+    this.stockFilter = 'all';
     this.applyFilter();
   }
 
