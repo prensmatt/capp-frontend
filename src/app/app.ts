@@ -10,5 +10,5 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
   styleUrl: './app.css'
 })
 export class App {
-  title = 'capp-frontend';
+  title = 'guistore';
 }

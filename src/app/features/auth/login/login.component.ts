@@ -15,6 +15,7 @@ import { Router, RouterLink } from '@angular/router';
 
 
 export class LoginComponent {
+  showPassword: boolean = false;
   credentials: LoginRequest={
     email: '',
     password: ''

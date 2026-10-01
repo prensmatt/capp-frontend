@@ -13,30 +13,45 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './signup.css',
 })
 export class SignupComponent {
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  
+  // Extra property to track confirm password field in template
+  confirmPassword: string = '';
+
   data: SignupRequest = {
     name: '',
     email: '',
     password: '',
     role: 'customer'
   };
+
   error: string = '';
   loading: boolean = false;
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ){}
+  ) {}
 
-  onSubmit(): void{
-    this.loading = true;
+  onSubmit(): void {
+    // Reset state
     this.error = '';
-  
+
+    // Frontend validation: Check if passwords match
+    if (this.data.password !== this.confirmPassword) {
+      this.error = 'Passwords do not match.';
+      return;
+    }
+
+    this.loading = true;
+
     this.authService.signup(this.data).subscribe({
       next: () => {
         this.router.navigate(['/login']);
       },
-      error: ()=>{
-        this.error = 'Could not create account. Email may already be taken';
+      error: (err) => {
+        this.error = err?.error?.message || 'Could not create account. Email may already be taken.';
         this.loading = false;
       }
     });
