@@ -96,4 +96,10 @@ export class ProductDetailComponent implements OnInit {
   goToCart(): void {
     this.router.navigate(['/cart']);
   }
+
+  isZoomed: boolean = false;
+
+  toggleZoom(): void {
+    this.isZoomed = !this.isZoomed;
+}
 }

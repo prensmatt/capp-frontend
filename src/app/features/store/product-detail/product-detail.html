@@ -15,12 +15,28 @@
 
   @if (product && !loading) {
     <div class="product-detail">
-      <div class="product-image-section">
-        <img
-          [src]="getImageUrl(product.image_url)"
-          [alt]="product.name"
-        />
-      </div>
+      <div class="product-image-section" (click)="toggleZoom()">
+  <img
+    [src]="getImageUrl(product.image_url)"
+    [alt]="product.name"
+    [class.zoomed]="isZoomed"
+  />
+  @if (!isZoomed) {
+  <div class="zoom-hint">🔍 Click to zoom</div>
+}
+</div>
+
+<!-- Zoom overlay -->
+@if (isZoomed) {
+  <div class="zoom-overlay" (click)="toggleZoom()">
+    <img
+      [src]="getImageUrl(product.image_url)"
+      [alt]="product.name"
+      class="zoom-image"
+    />
+    <button class="zoom-close">✕</button>
+  </div>
+}
 
       <div class="product-info">
         <h1>{{ product.name }}</h1>
