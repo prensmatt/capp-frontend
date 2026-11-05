@@ -20,7 +20,7 @@
       <a routerLink="/products" (click)="closeMenu()">Products</a>
       <a routerLink="/profile" (click)="closeMenu()">Profile</a>
       <a routerLink="/cart" class="cart-icon" (click)="closeMenu()">
-        🛒
+        🛒 <span class="cart-label">Cart</span>
         @if (cartCount > 0) {
           <span class="cart-badge">{{ cartCount }}</span>
         }
